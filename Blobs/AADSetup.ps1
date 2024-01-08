@@ -37,8 +37,11 @@ param (
     .\AADSetup.ps1 -AdminUsername "admin" -AdminPassword (ConvertTo-SecureString "password" -AsPlainText -Force) -NewUserPassword (ConvertTo-SecureString "newpassword" -AsPlainText -Force) -ManagedIdentityClientId "12345678-1234-1234-1234-1234567890ab" -domainName "contoso.com"
 #>
 
-# Install the Microsoft Graph PowerShell module if it is not already installed
+# Install the Microsoft Graph (and Nuget provider) PowerShell module if it is not already installed
 if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
+    if (-not (Get-PackageProvider -Name NuGet -ListAvailable)) {
+        Install-PackageProvider -Name NuGet -Force
+    }
     Install-Module -Name Microsoft.Graph -Force
 }
 # Import the required modules
@@ -58,6 +61,8 @@ $ouName = "Entra"
 $domainDN = $domainName -replace "\.", ",DC="
 $ouPath = "OU=$ouName,DC=$domainDN"  # Replace with your domain information
 $newdomainDN = "DC=$domainDN"
+
+# TODO: Add check to see if OU already exists, even though it shouldn't.
 New-ADOrganizationalUnit -Path $newdomainDN -Name $ouName
 foreach ($user in $cloudUsers) {
     $userPrincipalName = $user.UserPrincipalName
