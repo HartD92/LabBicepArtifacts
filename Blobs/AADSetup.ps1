@@ -42,12 +42,13 @@ if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
     Install-Module -Name Microsoft.Graph -Force
 }
 # Import the required modules
-Import-Module Microsoft.Graph
+Import-Module Microsoft.Graph.Authentication
+Import-Module Microsoft.Graph.Users
 Import-Module ActiveDirectory
 # Connect to Azure Active Directory
 $domainUsername = "$domainName\$AdminUsername"
 $domainCredential = New-Object System.Management.Automation.PSCredential($domainUsername, (ConvertTo-SecureString $AdminPassword -AsPlainText -force))
-Connect-MgGraph -Scopes "User.Read.All" -Identity -ClientId $ManagedIdentityClientId
+Connect-MgGraph -Identity -ClientId $ManagedIdentityClientId
 
 # Download all cloud users
 $cloudUsers = Get-MgUser -All
@@ -56,7 +57,8 @@ $cloudUsers = Get-MgUser -All
 $ouName = "Entra"
 $domainDN = $domainName -replace "\.", ",DC="
 $ouPath = "OU=$ouName,DC=$domainDN"  # Replace with your domain information
-
+$newdomainDN = "DC=$domainDN"
+New-ADOrganizationalUnit -Path $newdomainDN -Name $ouName
 foreach ($user in $cloudUsers) {
     $userPrincipalName = $user.UserPrincipalName
     $displayName = $user.DisplayName
