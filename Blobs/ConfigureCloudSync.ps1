@@ -14,9 +14,9 @@ param(
 
     [Parameter(Mandatory, ParameterSetName = 'Credentials')]
     [System.Management.Automation.PSCredential]$hybridAdminCreds,
-
+    # Maybe change this to a PSObject for the token info?
     [Parameter(Mandatory, ParameterSetName = 'CredentialAndToken')]
-    [securestring]$accessToken,
+    [string]$accessToken,
     
     [Parameter(Mandatory, ParameterSetName = 'CredentialAndToken')]
     [string]$tenantId,
@@ -42,7 +42,7 @@ if ($PSCmdlet.ParameterSetName -ne 'CredentialAndToken'){
 Connect-AADCloudSyncAzureAD -Credential $hybridAdminCreds
 }
 else{
-    Connect-AADCloudSyncAzureAD -AccessToken convertfrom-securestring($accessToken) -TenantId $tenantId -UserPrincipalName $userId
+    Connect-AADCloudSyncAzureAD -AccessToken $accessToken -TenantId $tenantId -UserPrincipalName $userId
 }
 if ($PSCmdlet.ParameterSetName -eq 'Passwords'){
     $domainAdminCreds = New-Object System.Management.Automation.PSCredential -ArgumentList ($domainAdminUPN, $domainAdminPassword) 

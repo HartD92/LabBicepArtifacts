@@ -60,5 +60,5 @@ $DomainUserPassword = Get-Secret -Vault AZKVault -Name $DomainUserSecretName
 .\AADSetup.ps1 -DomainCredential $DomainAdminCredential -NewUserPassword $DomainUserPassword -ManagedIdentityClientId $ManagedIdentityClientId -domainName $DomainName
 # Call ConfigureCloudSync.ps1 with proper creds, using secureStrings
 $accesstoken = get-azaccesstoken
-.\ConfigureCloudSync.ps1 -AccessToken (convertto-securestring $accesstoken.token -asplaintext -force) -TenantId $accesstoken.tenantid -UserId $accesstoken.UserId -domainAdminCreds $DomainAdminCredential -domainname $DomainName
+.\ConfigureCloudSync.ps1 -AccessToken $accesstoken.token -TenantId $accesstoken.tenantid -UserId $accesstoken.UserId -domainAdminCreds $DomainAdminCredential -domainname $DomainName
 #.\ConfigureCloudSync.ps1 -hybridAdminCreds $AzureAdminCredential -domainAdminCreds $DomainAdminCredential -domainname $DomainName
