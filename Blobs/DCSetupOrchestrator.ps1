@@ -47,9 +47,9 @@ $VaultParameters = @{
 }
 Register-SecretVault -Module Az.KeyVault -Name AZKVault -VaultParameters $VaultParameters
 # Pull Hybrid Admin creds from Key Vault
-$AzureAdminUsername = Get-Secret -Vault AZKVault -Name $AzAdminSecretName -AsPlainText
-$AzureAdminPassword = Get-Secret -Vault AZKVault -Name $AzPassSecretName
-$AzureAdminCredential = New-Object System.Management.Automation.PSCredential($AzureAdminUsername, $AzureAdminPassword)
+#$AzureAdminUsername = Get-Secret -Vault AZKVault -Name $AzAdminSecretName -AsPlainText
+#$AzureAdminPassword = Get-Secret -Vault AZKVault -Name $AzPassSecretName
+#$AzureAdminCredential = New-Object System.Management.Automation.PSCredential($AzureAdminUsername, $AzureAdminPassword)
 # Pull Domain Admin creds from Key Vault
 $DomainAdminUsername = Get-Secret -Vault AZKVault -Name $DomainAdminSecretName -AsPlainText
 $DomainAdminPassword = Get-Secret -Vault AZKVault -Name $DomainPassSecretName
@@ -59,4 +59,6 @@ $DomainUserPassword = Get-Secret -Vault AZKVault -Name $DomainUserSecretName
 # Call AADSetup.ps1 with proper creds, using secureStrings
 .\AADSetup.ps1 -DomainCredential $DomainAdminCredential -NewUserPassword $DomainUserPassword -ManagedIdentityClientId $ManagedIdentityClientId -domainName $DomainName
 # Call ConfigureCloudSync.ps1 with proper creds, using secureStrings
-.\ConfigureCloudSync.ps1 -hybridAdminCredential $AzureAdminCredential -domainAdminCredential $DomainAdminCredential -domainname $DomainName
+$accesstoken = get-azaccesstoken
+.\ConfigureCloudSync.ps1 -AccessToken (convertto-securestring $accesstoken.token -asplaintext -force) -TenantId $accesstoken.tenantid -UserId $accesstoken.UserId -domainAdminCreds $DomainAdminCredential -domainname $DomainName
+#.\ConfigureCloudSync.ps1 -hybridAdminCreds $AzureAdminCredential -domainAdminCreds $DomainAdminCredential -domainname $DomainName
