@@ -1,32 +1,25 @@
 [CmdletBinding(DefaultParameterSetName = 'Credentials')]
 param(
-    [Parameter(Mandatory=$true)]
-    [Parameter(ParameterSetName = 'Passwords')]
+    [Parameter(Mandatory, ParameterSetName = 'Passwords')]
     [string]$hybridAdminUPN,
     
-    [Parameter(Mandatory=$true)]
-    [Parameter(ParameterSetName = 'Passwords')]
+    [Parameter(Mandatory, ParameterSetName = 'Passwords')]
     [securestring]$hybridAdminPassword,
 
-    [Parameter(Mandatory = $true)]
-    [Parameter(ParameterSetName = 'Passwords')]
+    [Parameter(Mandatory, ParameterSetName = 'Passwords')]
     [string]$domainAdminUPN,
     
-    [Parameter(Mandatory = $true)]
-    [Parameter(ParameterSetName = 'Passwords')]
+    [Parameter(Mandatory, ParameterSetName = 'Passwords')]
     [securestring]$domainAdminPassword,
 
-    [Parameter(Mandatory=$true)]
-    [Parameter(ParameterSetName = 'Credentials')]
+    [Parameter(Mandatory, ParameterSetName = 'Credentials')]
     [System.Management.Automation.PSCredential]$hybridAdminCredential,
     
-    [Parameter(Mandatory = $true)]
-    [Parameter(ParameterSetName = 'Credentials')]
+    [Parameter(Mandatory, ParameterSetName = 'Credentials')]
     [System.Management.Automation.PSCredential]$domainAdminCredential,
 
-    [Parameter(Mandatory = $true)]
-    [Parameter(ParameterSetName = 'Passwords')]
-    [Parameter(ParameterSetName = 'Credentials')]
+    [Parameter(Mandatory, ParameterSetName = 'Passwords')]
+    [Parameter(Mandatory, ParameterSetName = 'Credentials')]
     [string]$domainname
 )
 
