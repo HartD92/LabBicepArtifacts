@@ -20,6 +20,7 @@ param(
     [string]$DomainUserSecretName
 
 )
+# Might have to do some kind of network check here if the DNS Forwarding change doesn't fix this.
 # Install the Microsoft Graph and Az (and Nuget provider) PowerShell module if it is not already installed
 if (-not (Get-PackageProvider -Name NuGet -ListAvailable)) {
     Install-PackageProvider -Name NuGet -Force
@@ -27,8 +28,11 @@ if (-not (Get-PackageProvider -Name NuGet -ListAvailable)) {
 if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
     Install-Module -Name Microsoft.Graph -Force
 }
-if (-not (Get-Module -Name Az -ListAvailable)) {
-    Install-Module -Name Az -Force
+if (-not (Get-Module -Name Az.Accounts -ListAvailable)) {
+    Install-Module -Name Az.Accounts -Force
+}
+if (-not (Get-Module -Name Az.KeyVault -ListAvailable)) {
+    Install-Module -Name Az.KeyVault -Force
 }
 if (-not (Get-Module -Name Microsoft.PowerShell.SecretManagement -ListAvailable)) {
     Install-Module -Name Microsoft.PowerShell.SecretManagement -Repository PSGallery -Force
