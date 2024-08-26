@@ -22,6 +22,7 @@ param(
 )
 # Might have to do some kind of network check here if the DNS Forwarding change doesn't fix this.
 # Install the Microsoft Graph and Az (and Nuget provider) PowerShell module if it is not already installed
+get-installedmodule | uninstall-module
 if ((get-module PackageManagement -ListAvailable).version.minor -eq 0) {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 }
