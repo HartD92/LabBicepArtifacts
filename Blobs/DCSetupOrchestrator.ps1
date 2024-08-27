@@ -47,6 +47,7 @@ Import-Module Az.Accounts
 Import-Module Az.KeyVault
 Import-Module Microsoft.PowerShell.SecretManagement
 # Connect to Azure
+Write-Output "Connecting to Azure with Managed Identity $ManagedIdentityClientId"
 Connect-AzAccount -Identity -AccountId $ManagedIdentityClientId
 # Add Key Vault
 $VaultParameters = @{
