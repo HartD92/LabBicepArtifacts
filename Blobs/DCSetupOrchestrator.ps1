@@ -33,7 +33,7 @@ if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
     Install-Module -Name Microsoft.Graph -Force
 }
 if (-not (Get-Module -Name Az.Accounts -ListAvailable)) {
-    Install-Module -Name Az.Accounts -Force
+    Install-Module -Name Az.Accounts -Force -RequiredVersion 2.13.2
 }
 if (-not (Get-Module -Name Az.KeyVault -ListAvailable)) {
     Install-Module -Name Az.KeyVault -Force
