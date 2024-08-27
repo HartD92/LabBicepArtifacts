@@ -44,11 +44,14 @@ param (
 #>
 
 # Install the Microsoft Graph (and Nuget provider) PowerShell module if it is not already installed
-if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
+if (-not (Get-Module -Name Microsoft.Graph.Users -ListAvailable)) {
     if (-not (Get-PackageProvider -Name NuGet -ListAvailable)) {
         Install-PackageProvider -Name NuGet -Force
     }
-    Install-Module -Name Microsoft.Graph -Force
+    Install-Module -Name Microsoft.Graph.Users -Force
+}
+if (-not (Get-Module -Name Microsoft.Graph.Authentication -ListAvailable)) {
+    Install-Module -Name Microsoft.Graph.Authentication -Force
 }
 # Import the required modules
 Import-Module Microsoft.Graph.Authentication
@@ -62,7 +65,7 @@ $domainCredential = New-Object System.Management.Automation.PSCredential($domain
 Connect-MgGraph -Identity -ClientId $ManagedIdentityClientId
 
 # Download all cloud users
-$cloudUsers = Get-MgUser -All
+$cloudUsers = Get-MgUser -All | Where-Object { $_.UserPrincipalName -notlike "*onmicrosoft.com" }
 
 # Provision users in Active Directory
 $ouName = "Entra"

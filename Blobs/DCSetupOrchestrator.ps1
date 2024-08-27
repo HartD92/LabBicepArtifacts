@@ -22,9 +22,6 @@ param(
 )
 # Might have to do some kind of network check here if the DNS Forwarding change doesn't fix this.
 # Install the Microsoft Graph and Az (and Nuget provider) PowerShell module if it is not already installed
-#if ((get-module PackageManagement -ListAvailable).version.minor -eq 0) {
-#    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-#}
 if (-not (Get-PackageProvider -Name NuGet -ListAvailable)) {
     Install-PackageProvider -Name NuGet -Force
 }
@@ -63,7 +60,7 @@ Register-SecretVault -Module Az.KeyVault -Name AZKVault -VaultParameters $VaultP
 # Pull Domain Admin creds from Key Vault
 $DomainAdminUsername = Get-Secret -Vault AZKVault -Name $DomainAdminSecretName -AsPlainText
 $DomainAdminPassword = Get-Secret -Vault AZKVault -Name $DomainPassSecretName
-$DomainAdminCredential = New-Object System.Management.Automation.PSCredential($DomainAdminUsername, $DomainAdminPassword)
+$DomainAdminCredential = New-Object System.Management.Automation.PSCredential(($DomainName+"\"+$DomainAdminUsername), $DomainAdminPassword)
 
 $DomainUserPassword = Get-Secret -Vault AZKVault -Name $DomainUserSecretName
 # Call AADSetup.ps1 with proper creds, using secureStrings
