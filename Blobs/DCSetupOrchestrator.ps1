@@ -22,18 +22,20 @@ param(
 )
 # Might have to do some kind of network check here if the DNS Forwarding change doesn't fix this.
 # Install the Microsoft Graph and Az (and Nuget provider) PowerShell module if it is not already installed
-get-installedmodule | uninstall-module
-if ((get-module PackageManagement -ListAvailable).version.minor -eq 0) {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-}
+#if ((get-module PackageManagement -ListAvailable).version.minor -eq 0) {
+#    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+#}
 if (-not (Get-PackageProvider -Name NuGet -ListAvailable)) {
     Install-PackageProvider -Name NuGet -Force
 }
-if (-not (Get-Module -Name Microsoft.Graph -ListAvailable)) {
-    Install-Module -Name Microsoft.Graph -Force
+if (-not (Get-Module -Name Microsoft.Graph.Authentication -ListAvailable)) {
+    Install-Module -Name Microsoft.Graph.Authentication -Force
+}
+if (-not (Get-Module -Name Microsoft.Graph.Users -ListAvailable)) {
+    Install-Module -Name Microsoft.Graph.Users -Force
 }
 if (-not (Get-Module -Name Az.Accounts -ListAvailable)) {
-    Install-Module -Name Az.Accounts -Force -RequiredVersion 2.13.2
+    Install-Module -Name Az.Accounts -Force
 }
 if (-not (Get-Module -Name Az.KeyVault -ListAvailable)) {
     Install-Module -Name Az.KeyVault -Force
@@ -42,7 +44,6 @@ if (-not (Get-Module -Name Microsoft.PowerShell.SecretManagement -ListAvailable)
     Install-Module -Name Microsoft.PowerShell.SecretManagement -Repository PSGallery -Force
 }
 # Import Required Modules
-Import-Module Microsoft.Graph.Authentication
 Import-Module Az.Accounts
 Import-Module Az.KeyVault
 Import-Module Microsoft.PowerShell.SecretManagement
