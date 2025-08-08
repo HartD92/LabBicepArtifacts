@@ -66,6 +66,12 @@ $DomainUserPassword = Get-Secret -Vault AZKVault -Name $DomainUserSecretName
 # Call AADSetup.ps1 with proper creds, using secureStrings
 .\AADSetup.ps1 -DomainCredential $DomainAdminCredential -NewUserPassword $DomainUserPassword -ManagedIdentityClientId $ManagedIdentityClientId -domainName $DomainName
 # Call ConfigureCloudSync.ps1 with proper creds, using secureStrings
+Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp\' -Name EnableDefaultHTTP2 -Value 0
 $accesstoken = get-azaccesstoken
+$cwd = get-location
+cd 'C:\program files\Microsoft Entra private network connector'
+$securetoken = ConvertTo-SecureString $accesstoken.token -AsPlainText -Force
+.\RegisterConnector.ps1 -modulePath "C:\Program Files\Microsoft Entra private network connector\Modules\" -moduleName "MicrosoftEntraPrivateNetworkConnectorPSModule" -Authenticationmode Token -Token $securetoken -TenantId $tenantid -Feature ApplicationProxy
+cd $cwd
 .\ConfigureCloudSync.ps1 -AccessToken $accesstoken.token -TenantId $accesstoken.tenantid -UserId $accesstoken.UserId -domainAdminCreds $DomainAdminCredential -domainname $DomainName
 #.\ConfigureCloudSync.ps1 -hybridAdminCreds $AzureAdminCredential -domainAdminCreds $DomainAdminCredential -domainname $DomainName
